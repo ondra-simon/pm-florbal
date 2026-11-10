@@ -168,50 +168,96 @@ const PM_LIVE_CONFIG = {
     matches.forEach(match => container.appendChild(renderMatchCard(match, goals)));
   }
 
+  // Sjednocení ID zápasu před porovnáním.
+  // Odstraní mezery a převede text na velká písmena.
+  function normalizeMatchId(value) {
+    return String(value ?? "").trim().toUpperCase();
+  }
+
   function renderMatchCard(match, allGoals) {
     const card = makeElement("article", "match-card");
-    const events = allGoals.filter(goal => goal.matchId === match.id)
-      .sort((a, b) => Number(a.goalNo || 0) - Number(b.goalNo || 0));
+
+    const currentMatchId = normalizeMatchId(match.id);
+
+    const events = allGoals.filter(goal =>
+      normalizeMatchId(goal.matchId) === currentMatchId
+    ).sort((a, b) => Number(a.goalNo || 0) - Number(b.goalNo || 0));
 
     const head = makeElement("div", "match-card-head");
     const meta = makeElement("div", "match-meta");
+
     meta.append(
       makeElement("span", "match-time", match.startAt || "ČAS BUDE DOPLNĚN"),
       makeElement("span", "", "· " + (match.roundName || match.stage || "ZÁPAS"))
     );
+
     head.appendChild(meta);
-    if (match.finished) head.appendChild(makeElement("span", "match-finished", "UKONČENO"));
+
+    if (match.finished) {
+      head.appendChild(makeElement("span", "match-finished", "UKONČENO"));
+    }
 
     const main = makeElement("div", "match-main");
     const teamA = makeTeamElement(match.teamAName, false);
     const teamB = makeTeamElement(match.teamBName, true);
-    const hasScore = events.length > 0 || match.finished;
-    const score = makeElement("div", hasScore ? "match-score" : "match-score is-empty",
-      hasScore ? Number(match.scoreA || 0) + " : " + Number(match.scoreB || 0) : "VS");
-    main.append(teamA, score, teamB);
 
+    const hasScore = events.length > 0 || match.finished;
+
+    const score = makeElement(
+      "div",
+      hasScore ? "match-score" : "match-score is-empty",
+      hasScore
+        ? Number(match.scoreA || 0) + " : " + Number(match.scoreB || 0)
+        : "VS"
+    );
+
+    main.append(teamA, score, teamB);
     card.append(head, main);
 
     if (events.length) {
       const eventList = makeElement("div", "match-events");
+
       events.forEach(goal => {
         const side = getGoalTeamSide(goal, match);
-        const event = makeElement("div", "goal-event" + (side === "b" ? " goal-event--b" : " goal-event--a"));
+
+        const event = makeElement(
+          "div",
+          "goal-event" + (side === "b" ? " goal-event--b" : " goal-event--a")
+        );
+
         const scoreText = makeElement("span", "goal-score", goal.scoreAfter || "");
         const text = makeElement("div", "goal-text");
-        text.appendChild(makeElement("strong", "", goal.scorerName || "Neznámý střelec"));
+
+        text.appendChild(
+          makeElement("strong", "", goal.scorerName || "Neznámý střelec")
+        );
+
         if (goal.assistName) {
-          text.appendChild(makeElement("span", "goal-assist", "Asistence: " + goal.assistName));
+          text.appendChild(
+            makeElement("span", "goal-assist", "Asistence: " + goal.assistName)
+          );
         }
-        if (side === "b") event.append(text, scoreText);
-        else event.append(scoreText, text);
+
+        if (side === "b") {
+          event.append(text, scoreText);
+        } else {
+          event.append(scoreText, text);
+        }
+
         eventList.appendChild(event);
       });
+
       card.appendChild(eventList);
+
     } else if (!match.teamAName || !match.teamBName) {
-      card.appendChild(makeElement("div", "match-pending", "Soupeři budou doplněni podle konečného pořadí skupiny."));
+      card.appendChild(
+        makeElement("div", "match-pending", "Soupeři budou doplněni podle konečného pořadí skupiny.")
+      );
+
     } else if (match.finished) {
-      card.appendChild(makeElement("div", "match-pending", "Konečný výsledek · bez vstřelených branek."));
+      card.appendChild(
+        makeElement("div", "match-pending", "Konečný výsledek · bez vstřelených branek.")
+      );
     }
 
     return card;
@@ -219,7 +265,11 @@ const PM_LIVE_CONFIG = {
 
   function makeTeamElement(name, right) {
     const team = makeElement("div", "match-team", name || "ČEKÁ NA SOUPEŘE");
-    if (right) team.style.textAlign = "right";
+
+    if (right) {
+      team.style.textAlign = "right";
+    }
+
     return team;
   }
 
@@ -228,22 +278,29 @@ const PM_LIVE_CONFIG = {
     const scoringId = String(goal.scoringTeamId || goal.teamId || "").trim().toLowerCase();
     const teamAId = String(match.teamAId || "").trim().toLowerCase();
     const teamBId = String(match.teamBId || "").trim().toLowerCase();
+
     if (scoringId && teamAId && scoringId === teamAId) return "a";
     if (scoringId && teamBId && scoringId === teamBId) return "b";
 
     // Záloha pro případ, že API posílá pouze názvy týmů.
     const normalize = value => String(value || "").trim().toLocaleLowerCase("cs-CZ");
+
     const scoringName = normalize(goal.scoringTeamName);
+
     if (scoringName && scoringName === normalize(match.teamAName)) return "a";
     if (scoringName && scoringName === normalize(match.teamBName)) return "b";
+
     return "a";
   }
 
   function renderMatrix(matrix) {
     const rows = Array.isArray(matrix.rows) ? matrix.rows : [];
     const headers = Array.isArray(matrix.headers) ? matrix.headers : [];
+
     if (!rows.length) {
-      el.matrix.replaceChildren(makeElement("div", "empty-card", "Výsledková mřížka zatím není dostupná."));
+      el.matrix.replaceChildren(
+        makeElement("div", "empty-card", "Výsledková mřížka zatím není dostupná.")
+      );
       return;
     }
 
@@ -251,30 +308,53 @@ const PM_LIVE_CONFIG = {
     const table = makeElement("table", "matrix-table");
     const thead = document.createElement("thead");
     const headRow = document.createElement("tr");
+
     const labels = ["TÝM", ...headers.slice(2, 8), "SKÓRE", "BODY", "POŘADÍ"];
+
     labels.forEach((label, index) => {
       const th = makeElement("th", (index >= 7 ? "summary" : ""), label || "");
-      if (index === 0) th.scope = "col";
+
+      if (index === 0) {
+        th.scope = "col";
+      }
+
       headRow.appendChild(th);
     });
+
     thead.appendChild(headRow);
 
     const tbody = document.createElement("tbody");
+
     rows.forEach(row => {
       const tr = document.createElement("tr");
+
       const name = makeElement("th", "", row.teamName || row.teamId || "");
       name.scope = "row";
       tr.appendChild(name);
 
       (row.results || []).forEach(value => {
         const cellValue = value === "" || value === null ? "·" : String(value);
-        const td = makeElement("td", cellValue === "—" ? "diagonal" : "", cellValue);
+
+        const td = makeElement(
+          "td",
+          cellValue === "—" ? "diagonal" : "",
+          cellValue
+        );
+
         tr.appendChild(td);
       });
 
       tr.appendChild(makeElement("td", "summary", row.score || "0:0"));
       tr.appendChild(makeElement("td", "summary", String(row.points ?? 0)));
-      tr.appendChild(makeElement("td", "summary rank-cell", row.rank === "" || row.rank === null ? "—" : String(row.rank)));
+
+      tr.appendChild(
+        makeElement(
+          "td",
+          "summary rank-cell",
+          row.rank === "" || row.rank === null ? "—" : String(row.rank)
+        )
+      );
+
       tbody.appendChild(tr);
     });
 
@@ -285,44 +365,67 @@ const PM_LIVE_CONFIG = {
 
   function renderLeaderboard(players) {
     const mode = state.leaderboardMode;
+
     const sorted = [...players].sort((a, b) => {
       if (mode === "goals") {
         return Number(b.goals || 0) - Number(a.goals || 0) ||
           Number(b.points || 0) - Number(a.points || 0) ||
           String(a.name || "").localeCompare(String(b.name || ""), "cs");
       }
+
       return Number(b.points || 0) - Number(a.points || 0) ||
         Number(b.goals || 0) - Number(a.goals || 0) ||
         Number(b.assists || 0) - Number(a.assists || 0) ||
         String(a.name || "").localeCompare(String(b.name || ""), "cs");
     });
 
-    const visible = sorted.filter(player => Number(player.goals || 0) + Number(player.assists || 0) > 0);
+    const visible = sorted.filter(
+      player => Number(player.goals || 0) + Number(player.assists || 0) > 0
+    );
+
     if (!visible.length) {
-      el.leaderboard.replaceChildren(makeElement("div", "empty-card", "Statistiky hráčů se zobrazí po zapsání prvních gólů."));
+      el.leaderboard.replaceChildren(
+        makeElement("div", "empty-card", "Statistiky hráčů se zobrazí po zapsání prvních gólů.")
+      );
       return;
     }
 
     const table = makeElement("table", "leaderboard-table");
     const thead = document.createElement("thead");
     const hr = document.createElement("tr");
+
     ["#", "HRÁČ / TÝM", "GÓLY", "ASISTENCE", "BODY"].forEach((label, index) => {
       const th = makeElement("th", index > 1 ? "num" : "", label);
       hr.appendChild(th);
     });
+
     thead.appendChild(hr);
+
     const tbody = document.createElement("tbody");
 
     visible.forEach((player, index) => {
       const tr = document.createElement("tr");
-      tr.appendChild(makeElement("td", "player-rank", String(index + 1) + "."));
+
+      tr.appendChild(
+        makeElement("td", "player-rank", String(index + 1) + ".")
+      );
+
       const nameCell = document.createElement("td");
-      nameCell.appendChild(makeElement("span", "player-name", player.name || "Neznámý hráč"));
-      nameCell.appendChild(makeElement("span", "player-team", player.teamName || ""));
+
+      nameCell.appendChild(
+        makeElement("span", "player-name", player.name || "Neznámý hráč")
+      );
+
+      nameCell.appendChild(
+        makeElement("span", "player-team", player.teamName || "")
+      );
+
       tr.appendChild(nameCell);
+
       tr.appendChild(makeElement("td", "num", String(player.goals || 0)));
       tr.appendChild(makeElement("td", "num", String(player.assists || 0)));
       tr.appendChild(makeElement("td", "num points-cell", String(player.points || 0)));
+
       tbody.appendChild(tr);
     });
 
@@ -332,18 +435,34 @@ const PM_LIVE_CONFIG = {
 
   function makeElement(tag, className, text) {
     const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined && text !== null) node.textContent = String(text);
+
+    if (className) {
+      node.className = className;
+    }
+
+    if (text !== undefined && text !== null) {
+      node.textContent = String(text);
+    }
+
     return node;
   }
 
   function formatDateTime(value) {
     if (!value) return "";
+
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return String(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
     return new Intl.DateTimeFormat("cs-CZ", {
-      day: "2-digit", month: "2-digit", year: "numeric",
-      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
       timeZone: "Europe/Prague"
     }).format(date);
   }
@@ -351,15 +470,23 @@ const PM_LIVE_CONFIG = {
   document.querySelectorAll("[data-leaderboard]").forEach(button => {
     button.addEventListener("click", () => {
       state.leaderboardMode = button.dataset.leaderboard;
+
       document.querySelectorAll("[data-leaderboard]").forEach(other => {
         const active = other === button;
+
         other.classList.toggle("is-active", active);
         other.setAttribute("aria-pressed", String(active));
       });
-      if (state.data) renderLeaderboard(state.data.players || []);
+
+      if (state.data) {
+        renderLeaderboard(state.data.players || []);
+      }
     });
   });
 
   requestData();
-  state.requestTimer = window.setInterval(requestData, PM_LIVE_CONFIG.refreshMs);
+  state.requestTimer = window.setInterval(
+    requestData,
+    PM_LIVE_CONFIG.refreshMs
+  );
 })();
