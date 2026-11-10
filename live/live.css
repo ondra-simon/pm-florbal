@@ -161,16 +161,17 @@ a { color: inherit; }
 .match-time { color: var(--accent); font-weight: 650; font-size: 12px; letter-spacing: .025em; }
 .match-finished { color: var(--muted-2); font-size: 8px; font-weight: 600; letter-spacing: .11em; }
 .match-main {
-  --match-font-size: clamp(24px, 4vw, 32px);
+  --team-font-size: clamp(21px, 2.2vw, 25px);
+  --score-font-size: clamp(24px, 2.5vw, 27px);
   padding: 16px 15px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
 }
-.match-team { min-width: 0; font-size: var(--match-font-size); font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
+.match-team { min-width: 0; font-size: var(--team-font-size); font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
 .match-team:last-child { text-align: right; }
-.match-score { text-align: center; font-size: var(--match-font-size); line-height: 1; font-weight: 700; letter-spacing: -.045em; white-space: nowrap; }
+.match-score { text-align: center; font-size: var(--score-font-size); line-height: 1; font-weight: 700; letter-spacing: -.045em; white-space: nowrap; }
 .match-score.is-empty { color: var(--muted-2); font-size: 12px; font-weight: 500; letter-spacing: .12em; }
 .match-events { padding: 0 15px 12px; display: grid; gap: 6px; }
 .goal-event {
@@ -312,7 +313,7 @@ a { color: inherit; }
   .video-frame { border-radius: 7px; }
   .match-list { gap: 8px; }
   .match-card-head { padding: 10px 11px 8px; }
-  .match-main { --match-font-size: 26px; grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr); gap: 7px; padding: 14px 10px; }
+  .match-main { --team-font-size: 19px; --score-font-size: 20px; grid-template-columns: minmax(0, 1fr) 62px minmax(0, 1fr); gap: 7px; padding: 14px 10px; }
   .match-events { padding: 0 10px 10px; }
   .goal-event { width: 94%; grid-template-columns: 37px minmax(0, 1fr); gap: 7px; padding: 7px 8px; }
   .goal-event--b { grid-template-columns: minmax(0, 1fr) 37px; }
@@ -328,6 +329,6 @@ a { color: inherit; }
 @media (max-width: 380px) {
   .page-shell { width: calc(100% - 22px); }
   .back-link { max-width: 60px; }
-  .match-main { --match-font-size: 23px; grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr); }
+  .match-main { --team-font-size: 17px; --score-font-size: 18px; grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr); }
   .goal-event { width: 98%; }
 }
