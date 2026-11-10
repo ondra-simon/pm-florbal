@@ -313,7 +313,14 @@ a { color: inherit; }
   .video-frame { border-radius: 7px; }
   .match-list { gap: 8px; }
   .match-card-head { padding: 10px 11px 8px; }
-  .match-main { --team-font-size: 19px; --score-font-size: 20px; grid-template-columns: minmax(0, 1fr) 62px minmax(0, 1fr); gap: 7px; padding: 14px 10px; }
+  .match-main {
+  --match-font-size: 18px;
+  grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
+  gap: 7px;
+  padding: 14px 10px;}
+  .match-team {
+  overflow-wrap: normal;
+  word-break: normal;}
   .match-events { padding: 0 10px 10px; }
   .goal-event { width: 94%; grid-template-columns: 37px minmax(0, 1fr); gap: 7px; padding: 7px 8px; }
   .goal-event--b { grid-template-columns: minmax(0, 1fr) 37px; }
@@ -329,6 +336,7 @@ a { color: inherit; }
 @media (max-width: 380px) {
   .page-shell { width: calc(100% - 22px); }
   .back-link { max-width: 60px; }
-  .match-main { --team-font-size: 17px; --score-font-size: 18px; grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr); }
-  .goal-event { width: 98%; }
-}
+  .match-main {
+  --match-font-size: 16px;
+  grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);}
+  .goal-event { width: 98%; }}
