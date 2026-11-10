@@ -340,3 +340,9 @@ a { color: inherit; }
   --match-font-size: 16px;
   grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);}
   .goal-event { width: 98%; }}
+
+
+/* Zvýraznění bodů a pořadí v tabulce */
+.matrix-table tbody td:nth-last-child(-n + 2) {
+  font-weight: 800;
+}
