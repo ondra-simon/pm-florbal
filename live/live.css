@@ -161,17 +161,16 @@ a { color: inherit; }
 .match-time { color: var(--accent); font-weight: 650; font-size: 12px; letter-spacing: .025em; }
 .match-finished { color: var(--muted-2); font-size: 8px; font-weight: 600; letter-spacing: .11em; }
 .match-main {
-  --team-font-size: clamp(21px, 2.2vw, 25px);
-  --score-font-size: clamp(24px, 2.5vw, 27px);
+  --match-font-size: clamp(24px, 2.5vw, 27px);
   padding: 16px 15px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
 }
-.match-team { min-width: 0; font-size: var(--team-font-size); font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
+.match-team { min-width: 0; font-size: var(--match-font-size); font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
 .match-team:last-child { text-align: right; }
-.match-score { text-align: center; font-size: var(--score-font-size); line-height: 1; font-weight: 700; letter-spacing: -.045em; white-space: nowrap; }
+.match-score { text-align: center; font-size: var(--match-font-size); line-height: 1; font-weight: 700; letter-spacing: -.045em; white-space: nowrap; }
 .match-score.is-empty { color: var(--muted-2); font-size: 12px; font-weight: 500; letter-spacing: .12em; }
 .match-events { padding: 0 15px 12px; display: grid; gap: 6px; }
 .goal-event {
