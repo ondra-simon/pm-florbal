@@ -115,7 +115,7 @@ setInterval(
 // 20. 11. 2026 v 18:00 českého času (CET, UTC+1).
 // Explicitní časové pásmo zajistí stejný okamžik i při otevření webu ze zahraničí.
 const liveButton = document.getElementById("liveButton");
-const liveButtonStart = new Date("2026-11-20T18:00:00+01:00").getTime();
+const liveButtonStart = new Date("2026-11-19T18:00:00+01:00").getTime();
 
 if (liveButton) {
     let liveButtonTimer = null;
