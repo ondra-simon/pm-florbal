@@ -7,7 +7,7 @@
 const PM_LIVE_CONFIG = {
   // Vlož původní URL webové aplikace Apps Scriptu končící /exec.
   // Nepoužívej přesměrovanou adresu script.googleusercontent.com.
-  apiUrl: "https://script.google.com/macros/s/AKfycbwolPE_JPqSfVwoI1MaJ5IljcikmFBj-zmUb0jn9HlpdFSwzLsrF8RuJTkFsGVi89uu3w/exec",
+  apiUrl: "https://script.google.com/macros/s/AKfycbzAF7--Od7pFdR1QgwkgvHq-GlQ0dpmv8t0a97KcK6FbtVqN5nylSb2PkJ3NoyeUlEg/exec",
   refreshMs: 20000
 };
 
