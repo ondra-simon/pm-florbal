@@ -18,8 +18,9 @@ const PM_LIVE_CONFIG = {
     data: null,
     leaderboardMode: "goals",
     lastRequestAt: null,
-    requestTimer: null
-  };
+    requestTimer: null,
+    currentVideoId: undefined
+};
 
   const el = {
     connection: document.getElementById("connectionStatus"),
@@ -119,6 +120,9 @@ const PM_LIVE_CONFIG = {
 
   function renderVideo(meta) {
     const videoId = String(meta.youtubeVideoId || "").trim();
+        // Pokud se ID videa nezměnilo, ponecháme běžící iframe beze změny.
+    if (state.currentVideoId === videoId) return;
+    state.currentVideoId = videoId;
     if (!videoId) {
       el.videoFrame.replaceChildren();
       const placeholder = makeElement("div", "video-placeholder");
