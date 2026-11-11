@@ -346,3 +346,58 @@ a { color: inherit; }
 .matrix-table tbody td:nth-last-child(-n + 2) {
   font-weight: 800;
 }
+
+
+/* Konečné pořadí turnaje */
+.final-ranking-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.final-ranking-item {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 66px;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.final-ranking-item.is-champion {
+  border-color: rgba(95,224,106,.45);
+  background: linear-gradient(
+    110deg,
+    rgba(95,224,106,.09),
+    transparent 75%
+  ), var(--panel);
+}
+
+.final-ranking-place {
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.final-ranking-team {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .final-ranking-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .final-ranking-item {
+    min-height: 58px;
+    padding: 11px 13px;
+  }
+}
