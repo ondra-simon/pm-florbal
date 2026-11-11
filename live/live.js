@@ -32,7 +32,9 @@ const PM_LIVE_CONFIG = {
     playoffMatches: document.getElementById("playoffMatches"),
     groupProgress: document.getElementById("groupProgress"),
     matrix: document.getElementById("matrixMount"),
-    leaderboard: document.getElementById("leaderboardMount")
+    leaderboard: document.getElementById("leaderboardMount"),
+    finalRankingSection: document.getElementById("finalRankingSection"),
+    finalRankingMount: document.getElementById("finalRankingMount")
   };
 
   function setConnection(kind, message) {
@@ -112,6 +114,7 @@ const PM_LIVE_CONFIG = {
     renderMatches(data.matches || [], data.goals || []);
     renderMatrix(data.matrix || {});
     renderLeaderboard(data.players || []);
+    renderFinalRanking(data.finalRanking || {});
   }
 
   function renderVideo(meta) {
@@ -203,13 +206,33 @@ const PM_LIVE_CONFIG = {
 
     const hasScore = events.length > 0 || match.finished;
 
+    const scoreA = match.displayScoreA ?? match.scoreA;
+    const scoreB = match.displayScoreB ?? match.scoreB;
+
+    const suffix = match.finished
+      ? String(match.resultSuffix || "").trim().toUpperCase()
+      : "";
+
     const score = makeElement(
       "div",
-      hasScore ? "match-score" : "match-score is-empty",
-      hasScore
-        ? Number(match.scoreA || 0) + " : " + Number(match.scoreB || 0)
-        : "VS"
+      hasScore ? "match-score" : "match-score is-empty"
     );
+
+    score.appendChild(
+      makeElement(
+        "span",
+        "match-score-value",
+        hasScore
+          ? Number(scoreA || 0) + " : " + Number(scoreB || 0)
+          : "VS"
+      )
+    );
+
+    if (hasScore && (suffix === "PP" || suffix === "SN")) {
+      score.appendChild(
+        makeElement("span", "match-score-suffix", suffix)
+      );
+    }
 
     main.append(teamA, score, teamB);
     card.append(head, main);
@@ -361,6 +384,47 @@ const PM_LIVE_CONFIG = {
     table.append(thead, tbody);
     wrap.appendChild(table);
     el.matrix.replaceChildren(wrap);
+  }
+
+    function renderFinalRanking(finalRanking) {
+    const section = el.finalRankingSection;
+    const mount = el.finalRankingMount;
+
+    if (!section || !mount) return;
+
+    const rows = Array.isArray(finalRanking.rows)
+      ? finalRanking.rows.slice()
+      : [];
+
+    const ready =
+      finalRanking.ready === true &&
+      rows.length === 6 &&
+      new Set(rows.map(row => row.teamId)).size === 6 &&
+      rows.every(row => Number(row.rank) >= 1 && Number(row.rank) <= 6);
+
+    // Sekce se ukáže až po dokončení všech zápasů play-off.
+    section.hidden = !ready;
+    mount.replaceChildren();
+
+    if (!ready) return;
+
+    rows.sort((a, b) => Number(a.rank) - Number(b.rank));
+
+    rows.forEach(row => {
+      const isChampion = Number(row.rank) === 1;
+
+      const item = makeElement(
+        "div",
+        "final-ranking-item" + (isChampion ? " is-champion" : "")
+      );
+
+      item.append(
+        makeElement("span", "final-ranking-place", Number(row.rank) + "."),
+        makeElement("strong", "final-ranking-team", row.teamName || row.teamId)
+      );
+
+      mount.appendChild(item);
+    });
   }
 
   function renderLeaderboard(players) {
