@@ -245,6 +245,16 @@ h1 span {
     color: #090b0a;
 }
 
+/* LIVE tlačítko se zobrazí až od 20. 11. 2026 v 18:00. */
+.hero-live-button[hidden] {
+    display: none !important;
+}
+
+.hero-live-button {
+    border-color: rgba(95, 224, 106, 0.7);
+    background: rgba(95, 224, 106, 0.07);
+}
+
 /* Facebook odkaz vedle hlavního tlačítka */
 .hero-facebook-button {
     display: inline-flex;

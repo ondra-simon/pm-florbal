@@ -109,6 +109,38 @@ setInterval(
 );
 
 // ========================================
+// AUTOMATICKÉ ZOBRAZENÍ LIVE TLAČÍTKA
+// ========================================
+
+// 20. 11. 2026 v 18:00 českého času (CET, UTC+1).
+// Explicitní časové pásmo zajistí stejný okamžik i při otevření webu ze zahraničí.
+const liveButton = document.getElementById("liveButton");
+const liveButtonStart = new Date("2026-11-10T18:00:00+01:00").getTime();
+
+if (liveButton) {
+    let liveButtonTimer = null;
+
+    const revealLiveButton = () => {
+        if (Date.now() < liveButtonStart) return;
+
+        liveButton.hidden = false;
+
+        if (liveButtonTimer !== null) {
+            clearInterval(liveButtonTimer);
+            liveButtonTimer = null;
+        }
+    };
+
+    // Při načtení po stanoveném čase se tlačítko ukáže okamžitě.
+    revealLiveButton();
+
+    // Pokud je stránka otevřená před 18:00, tlačítko se ukáže automaticky.
+    if (liveButton.hidden) {
+        liveButtonTimer = window.setInterval(revealLiveButton, 1000);
+    }
+}
+
+// ========================================
 // MOBILNÍ MENU
 // ========================================
 
