@@ -1391,3 +1391,11 @@ h1 span {
         letter-spacing: 1.8px;
     }
 }
+
+/* Odkazy na loga partnerů */
+.partner-card > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
