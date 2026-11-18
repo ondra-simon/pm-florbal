@@ -278,7 +278,7 @@ const PM_LIVE_CONFIG = {
 
     } else if (!match.teamAName || !match.teamBName) {
       card.appendChild(
-        makeElement("div", "match-pending", "Soupeři budou doplněni podle konečného pořadí skupiny.")
+        makeElement("div", "match-pending", "Soupeři budou doplněni podle předešlých výsledků.")
       );
 
     } else if (match.finished) {
