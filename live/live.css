@@ -413,7 +413,9 @@ a { color: inherit; }
 
 
 
-/* Dočasné skrytí sekce živého přenosu */
+/* Dočasné skrytí sekce živého přenosu 
 .stream-section {
     display: none !important;
 }
+
+*/
